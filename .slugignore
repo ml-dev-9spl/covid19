@@ -1,0 +1,5 @@
+# list of files to be ignored while generating slug in heroku
+/v_covid19
+/ml_app/images
+/media
+/.idea

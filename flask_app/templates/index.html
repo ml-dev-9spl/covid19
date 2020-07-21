@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Home | Covid19 Detector {% endblock %}</h1>
+{% endblock %}
+
+{% block crumbs_wrapper %}
+{% endblock %}
+
+{% block hero %}
+<section id="hero" class="d-flex align-items-center">
+    <div class="container-fluid" data-aos="fade-up">
+      <div class="row justify-content-center">
+        <div class="col-xl-5 col-lg-6 pt-3 pt-lg-0 order-2 order-lg-1 d-flex flex-column justify-content-center">
+          <h1>Make Predictions using Xrays</h1>
+          <h2>A Portal for COVID-19 Detector and Usefull tips </h2>
+          <div><a href="{{ url_for('ml_app.detect')}}" class="btn-get-started scrollto">Get Started</a></div>
+        </div>
+        <div class="col-xl-4 col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-in" data-aos-delay="150">
+<!--          <img src="{{ url_for('static', filename='assets/img/hero-img.png') }}" class="img-fluid animated" alt="">-->
+          <div id="chartdiv"></div>
+          <div class="row text-center">
+              <h2> covid-19 cases in india from december 31, 2019</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block inner_page_wrapper %}
+{% endblock %}
+
+<!--footer block-->
+{% block footer %}
+<!--empty-->
+{% endblock %}
+
+
+{% block customjs %}
+<!-- Resources -->
+<script src="https://www.amcharts.com/lib/4/core.js"></script>
+<script src="https://www.amcharts.com/lib/4/charts.js"></script>
+<script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+<!-- Chart code -->
+<script>
+am4core.ready(function() {
+
+// Themes begin
+am4core.useTheme(am4themes_animated);
+// Themes end
+
+var chart = am4core.create("chartdiv", am4charts.XYChart);
+
+var data = {{ data | safe}};
+
+chart.data = data
+
+// Create axes
+var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+dateAxis.renderer.minGridDistance = 60;
+
+var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+
+// Create series
+var series = chart.series.push(new am4charts.LineSeries());
+series.dataFields.valueY = "value";
+series.dataFields.dateX = "date";
+series.tooltipText = "{value}"
+
+series.tooltip.pointerOrientation = "vertical";
+
+chart.cursor = new am4charts.XYCursor();
+chart.cursor.snapToSeries = series;
+chart.cursor.xAxis = dateAxis;
+
+//chart.scrollbarY = new am4core.Scrollbar();
+//chart.scrollbarX = new am4core.Scrollbar();-->
+
+}); // end am4core.ready()
+</script>
+{% endblock %}

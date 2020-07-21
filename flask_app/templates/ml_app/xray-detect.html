@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %} Detect {% endblock %}
+
+
+{% block customcss %}
+<link href="{{ url_for('static', filename='css/covid-form.css') }}" rel="stylesheet">
+{% endblock %}
+
+
+{% block breadcrumbs %}
+<h2>Detect Diesease</h2>
+<ol>
+  <li><a href="{{ url_for('main.index') }}">Home</a></li>
+  <li><a href="">Detect</a></li>
+</ol>
+{% endblock %}
+
+{% block content %}
+{{ dump }}
+<div class="covid-form">
+  <form action="" data-parsley-validate="" enctype="multipart/form-data" id="demo-form" method="post">
+     {{ form.csrf_token }}
+<!--    form group for file-->
+    <div class="form-group">
+      {{ form.xray.label }}
+      <div class="custom-file">
+        <label class="custom-file-label" for="xray">Choose xray image...</label>
+        {% if form.xray.errors %}
+          {{ form.xray(class='custom-file-input is-invalid', type='file')}}
+            <div class="invalid-feedback">
+              {% for error in form.xray.errors %}<p>{{ error }}</p>{% endfor %}
+            </div>
+        {% else %}
+          {{ form.xray(class='custom-file-inputl') }}
+        {% endif %}
+      </div>
+    </div>
+    <div class="form-group">
+      <img width="250" height="250" alt="your image" id="img_preview" src="#" style="display:none;"/>
+    </div>
+    <button class="btn btn-primary" type="submit">Detect</button>
+  </form>
+</div>
+{% endblock %}
+
+{% block customjs %}
+<script>
+  function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('#img_preview').attr('src', e.target.result);
+            $('#img_preview').show();
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+$("#xray").change(function(){
+    readURL(this);
+});
+</script>
+{% endblock %}

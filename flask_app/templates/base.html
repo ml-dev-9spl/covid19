@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>
+    {% block title %} Home {% endblock %}
+  </title>
+  <meta content="" name="descriptison">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="{{ url_for('static', filename='assets/img/favicon.png')}}" rel="icon">
+
+  <link href="{{ url_for('static', filename='assets/img/apple-touch-icon.png')}}" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Roboto:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{{ url_for('static', filename='assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/icofont/icofont.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/owl.carousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/venobox/venobox.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/aos/aos.css') }}" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="{{ url_for('static', filename='assets/css/style.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/charts/Chart.min.css') }}" rel="stylesheet">
+
+  {% block customcss %}
+  <!--    custom css goes here-->
+  {% endblock %}
+</head>
+
+<body>
+<!-- ======= Header ======= -->
+<header class="fixed-top header-inner-pages" id="header">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-xl-9 d-flex align-items-center">
+        <h1 class="logo mr-auto"><a href="{{ url_for('main.index') }}">9Series</a></h1>
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <!-- <a href="index.html" class="logo mr-auto"><img src="{{ url_for('static', filename='assets/img/logo.png')}}" alt="" class="img-fluid"></a>-->
+        {% if g.user %}
+        <nav class="nav-menu d-none d-lg-block">
+          <ul>
+            <li class="drop-down"><a href="">Covid-19</a>
+              <ul>
+                <li><a href="{{ url_for('ml_app.detect') }}">Detect</a></li>
+                <li><a href="{{ url_for('ml_app.upload_image') }}">Upload Image</a></li>
+                <li><a href="{{ url_for('ml_app.my_uploads') }}">My Uploads</a></li>
+              </ul>
+            </li>
+            <li><a href="{{ url_for('auth.logout') }}">logout</a></li>
+            <!--              <li><a href="#contact">Contact Us</a></li>-->
+          </ul>
+        </nav><!-- .nav-menu -->
+        {% else %}
+        <a class="get-started-btn scrollto" href="{{ url_for('auth.login') }}">login</a>
+        <a class="get-started-btn scrollto" href="{{ url_for('auth.register') }}">register</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</header><!-- End Header -->
+{% block hero %}
+
+{% endblock %}
+
+{% block toasts %}
+<div class="toast-container">
+  {% for message in get_flashed_messages(with_categories=True) %}
+  <div class="toast" data-aos-delay="100" data-autohide="false">
+    <div class="toast-header">
+      <img width="25" src="{{ url_for('static', filename='assets/img/apple-touch-icon.png')}}" class="rounded mr-2" alt="...">
+      <strong class="mr-auto">9spl</strong>
+      <small>Just Now</small>
+      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="toast-body">
+      {{message}}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
+
+<main id="main">
+  <!-- ======= Breadcrumbs ======= -->
+{% block crumbs_wrapper %}
+  <section class="breadcrumbs">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center">
+        {% block breadcrumbs %}
+        <h2>Inner Page</h2>
+        <ol>
+          <li><a href="index.html">Home</a></li>
+        </ol>
+        {% endblock %}
+      </div>
+    </div>
+  </section><!-- End Breadcrumbs -->
+{% endblock %}
+{% block inner_page_wrapper %}
+  <section class="inner-page">
+    <div class="container">
+      {% block content %}
+      <!-- main content goes here -->
+      {% endblock %}
+    </div>
+  </section>
+{% endblock %}
+</main><!-- End #main -->
+
+<!-- ======= Footer ======= -->
+{% block footer %}
+<footer id="footer">
+
+  <div class="footer-top">
+    <div class="container">
+      <div class="row">
+
+        <div class="col-lg-3 col-md-6 footer-contact">
+          <h3>9Series</h3>
+          <p>
+             405, Avadhesh House,<br> Opp. Gurudwara, Sarkhej - Gandhinagar Hwy,<br> Bodakdev, Ahmedabad,<br> Gujarat 380054<br>
+            <strong>Phone:</strong> 079 4892 3499<br>
+            <strong>Email:</strong> hr@9spl.com<br>
+          </p>
+        </div>
+
+        <div class="col-lg-2 col-md-6 footer-links">
+          <h4>Useful Links</h4>
+          <ul>
+            <li><i class="bx bx-chevron-right"></i> <a href="{{ url_for('main.index') }}">Home</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3 col-md-6 footer-links">
+          <h4>Our Services</h4>
+          <ul>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Web Development</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Product Management</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-4 col-md-6 footer-newsletter">
+          <h4>Join Our Newsletter</h4>
+          <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna</p>
+          <form action="" method="post">
+            <input name="email" type="email"><input type="submit" value="Subscribe">
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <div class="copyright-wrap d-md-flex py-4">
+      <div class="mr-md-auto text-center text-md-left">
+        <div class="copyright">
+          &copy; Copyright <strong><span>Techie</span></strong>. All Rights Reserved
+        </div>
+        <div class="credits">
+          <!-- All the links in the footer should remain intact. -->
+          <!-- You can delete the links only if you purchased the pro version. -->
+          <!-- Licensing information: https://bootstrapmade.com/license/ -->
+          <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/techie-free-skin-bootstrap-3/ -->
+          Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+        </div>
+      </div>
+      <div class="social-links text-center text-md-right pt-3 pt-md-0">
+        <a class="twitter" href="#"><i class="bx bxl-twitter"></i></a>
+        <a class="facebook" href="#"><i class="bx bxl-facebook"></i></a>
+        <a class="instagram" href="#"><i class="bx bxl-instagram"></i></a>
+        <a class="google-plus" href="#"><i class="bx bxl-skype"></i></a>
+        <a class="linkedin" href="#"><i class="bx bxl-linkedin"></i></a>
+      </div>
+    </div>
+
+  </div>
+</footer><!-- End Footer -->
+{% endblock %}
+<a class="back-to-top" href="#"><i class="icofont-simple-up"></i></a>
+<div id="preloader"></div>
+
+<!-- Vendor JS Files -->
+<script src="{{ url_for('static', filename='assets/vendor/jquery/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/vendor/jquery.easing/jquery.easing.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/vendor/php-email-form/validate.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/vendor/waypoints/jquery.waypoints.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/vendor/counterup/counterup.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/vendor/owl.carousel/owl.carousel.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/vendor/isotope-layout/isotope.pkgd.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/vendor/venobox/venobox.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/vendor/aos/aos.js') }}"></script>
+
+<!-- Template Main JS File -->
+<script src="{{ url_for('static', filename='assets/js/main.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/js/ajax_setup.js') }}"></script>
+<script>
+$(document).ready(function(){
+  $('.toast').toast('show');
+});
+</script>
+{% block customjs %}
+<!-- don't add anything here -->
+{% endblock %}
+</body>
+
+</html>

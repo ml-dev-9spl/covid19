@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block customcss %}
+<!-- Styles -->
+<style>
+#chartdiv {
+  width: 100%;
+  height: 500px;
+}
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+    <h2>Detection Result</h2>
+    <ol>
+      <li><a href="{{ url_for('main.index') }}">Home</a></li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-4" style="padding:19px;">
+    <img style="width:100%; height:300px;"  src="{{file_url}}" alt="xray" />
+  </div>
+  <div class="col-md-4">
+    <div style="height:300px;" id="chartdiv"></div>
+  </div>
+</div>
+
+{% endblock %}
+<!-- content block -->
+{%  block customjs %}
+<!-- Resources -->
+<script src="https://www.amcharts.com/lib/4/core.js"></script>
+<script src="https://www.amcharts.com/lib/4/charts.js"></script>
+<script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+<!-- Chart code -->
+<script>
+am4core.ready(function() {
+
+// Themes begin
+am4core.useTheme(am4themes_animated);
+// Themes end
+
+// Create chart instance
+var chart = am4core.create("chartdiv", am4charts.PieChart);
+
+// Add data
+chart.data = [ {
+  "diesease": "Covid-19",
+  "percent": {{ positive }}
+}, {
+  "diesease": "SARS",
+  "percent": {{100 - positive}}
+}];
+
+// Set inner radius
+chart.innerRadius = am4core.percent(50);
+
+// Add and configure Series
+var pieSeries = chart.series.push(new am4charts.PieSeries());
+pieSeries.dataFields.value = "percent";
+pieSeries.dataFields.category = "diesease";
+pieSeries.slices.template.stroke = am4core.color("#fff");
+pieSeries.slices.template.strokeWidth = 2;
+pieSeries.slices.template.strokeOpacity = 1;
+
+// This creates initial animation
+pieSeries.hiddenState.properties.opacity = 1;
+pieSeries.hiddenState.properties.endAngle = -90;
+pieSeries.hiddenState.properties.startAngle = -90;
+
+}); // end am4core.ready()
+
+</script>
+{% endblock %}

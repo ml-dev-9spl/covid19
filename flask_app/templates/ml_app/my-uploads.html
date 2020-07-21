@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}My Uploads{% endblock %}</h1>
+{% endblock %}
+
+{% block customcss %}
+  <link href="{{ url_for('static', filename='css/login.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block breadcrumbs %}
+  <h2>My Uploads</h2>
+  <ol>
+    <li><a href="index.html">Home</a></li>
+     <li><a href="">Uploads</a></li>
+  </ol>
+{% endblock %}
+
+{% block content %}
+<div class="row" style="justify-content: flex-end;">
+  {{ pagination.info }}
+</div>
+
+
+<table class="table table-borderless table-hover">
+  <thead>
+    <tr>
+      <th  scope="col">#</th>
+      <th  scope="col">User</th>
+      <th  scope="col">Diesease</th>
+      <th  scope="col">File</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in uploads %}
+      <tr >
+        <th scope="row">{{ loop.index + pagination.skip }}</th>
+        <td>{{ item.user.username }}</td>
+        <td>{{ item.get_diesease_display }}</td>
+        <td> <img width="50"  height="50" src="{{item.get_xray_url}}" /></td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{{ pagination.links }}
+{% endblock %}
