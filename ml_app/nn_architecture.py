@@ -21,6 +21,7 @@ from tensorflow.keras.layers import Flatten
 from tensorflow.keras.optimizers import SGD
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
+
 # define cnn model
 def define_model():
     # load model
@@ -38,6 +39,7 @@ def define_model():
     opt = SGD(lr=0.001, momentum=0.9)
     model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
     return model
+
 
 # run the test harness for evaluating a model
 def run_test_harness():
@@ -57,12 +59,12 @@ def run_test_harness():
     loaded_model = load_model(os.path.join(BASE_DIR, 'ml_app', 'saved_models'))
     return loaded_model  # loaded_model.summary()
 
+
 if __name__ == '__main__':
     run_test_harness()
 
 
 def load_and_predict(xray):
-
     # load the image
     img = load_img(xray, target_size=(224, 224))
     # convert to array
@@ -73,10 +75,9 @@ def load_and_predict(xray):
     img = img.astype('float32')
     img = img - [123.68, 116.779, 103.939]
     model = load_model(os.path.join(BASE_DIR, 'ml_app', 'saved_models'))
-    import pdb
-    pdb.set_trace()
     result = model.predict(img)
-    print(result.argmax(axis=-1))
+    return result.tolist()
+    # print(result.argmax(axis=-1))
 
 
 def get_covid_19_xrays():

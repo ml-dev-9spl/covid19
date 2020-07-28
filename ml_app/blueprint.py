@@ -42,7 +42,7 @@ def detect():
         filename = xrays.save(form.xray.data)
         xray_path = xrays.path(filename=filename)
         prediction = load_and_predict(xray_path)
-        positive = prediction
+        positive = prediction[0]
         diesease = 1
         try:
             user_upload = UserUploads(file=filename, diesease=diesease, user=g.user)
@@ -61,6 +61,9 @@ def results():
     logger.info("User requested to detect %s" % g.user)
     filename = session['file_url']
     positive = session['positive']
+    total = sum(positive)
+    positive[0] = (positive[0]/total)*100
+    positive[1] = (positive[1]/total)*100
     return render_template('ml_app/results.html', file_url=filename, positive=positive)
 
 

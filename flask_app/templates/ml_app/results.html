@@ -48,10 +48,10 @@ var chart = am4core.create("chartdiv", am4charts.PieChart);
 // Add data
 chart.data = [ {
   "diesease": "Covid-19",
-  "percent": {{ positive }}
+  "percent": {{ positive[1]}}
 }, {
   "diesease": "SARS",
-  "percent": {{100 - positive}}
+  "percent": {{ positive[1]}}
 }];
 
 // Set inner radius

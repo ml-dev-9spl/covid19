@@ -1,11 +1,10 @@
 import logging
 import requests
 import json
-import pandas as pd
-from flask import Blueprint, render_template, request, g, current_app
+from flask import Blueprint, render_template
 
 from flask_app import cache
-from flask_app.auth import login_required
+
 
 main_bp = Blueprint('main', __name__)
 
