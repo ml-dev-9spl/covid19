@@ -3,6 +3,7 @@ import os
 from flask import Flask
 from flask.logging import default_handler
 from flask_caching import Cache
+from flask_migrate import Migrate
 from flask_uploads import UploadSet, configure_uploads
 from flask_wtf import CSRFProtect
 
@@ -56,7 +57,7 @@ def create_app(test_config=None):
     # add database url to connect with the postgres
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
     db.init_app(app)
-
+    migrate = Migrate(app, db)  # this
     from . import auth
     app.register_blueprint(auth.bp)
 
