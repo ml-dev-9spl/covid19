@@ -37,6 +37,7 @@ def upload_image():
 @ml_bp.route('/detect', methods=["GET", "POST"])
 def detect():
     logger.info("User requested to detect %s" % g.user)
+    session.pop('positive', None)
     form = ImageDetectForm()
     if form.validate_on_submit():
         filename = xrays.save(form.xray.data)
