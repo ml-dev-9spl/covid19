@@ -5,6 +5,7 @@ from wtforms import StringField, BooleanField, FileField, SelectField
 
 from flask_app import xrays
 
+
 DISEASE_CHOICES = [('1', 'COVID19'), ('2', 'Pneumonia')]
 
 

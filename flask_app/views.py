@@ -12,7 +12,6 @@ logger = logging.getLogger('flask.app')
 
 
 @main_bp.route('/', methods=["GET"])
-@cache.cached(timeout=50)
 def index():
 
     payload = {'country': 'India'}  # or {'code': 'DE'}

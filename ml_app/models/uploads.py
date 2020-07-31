@@ -5,8 +5,10 @@ from flask_app.models.abc import BaseModel, MetaBaseModel
 
 
 class DieseaseType(enum.IntEnum):
+
     COVID19 = 1
     Pneumonia = 2
+    NORMAL = 3
 
 
 class UserUploads(db.Model, BaseModel, metaclass=MetaBaseModel):

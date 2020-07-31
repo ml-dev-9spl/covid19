@@ -1,19 +1,16 @@
 # baseline model for the dogs vs cats dataset
-import sys
-import pandas as pd
-import shutil
 import os
+import sys
+import shutil
 import numpy as np
-from keras_preprocessing.image import ImageDataGenerator, img_to_array, load_img
-from tensorflow.keras.models import load_model
-from tensorflow.python.keras.layers import Softmax
-from tensorflow.python.keras.preprocessing import image
+import pandas as pd
+from tensorflow.python.keras.layers import Conv2D, MaxPool2D, Dropout
+from tensorflow.python.keras.models import Sequential
 
 from flask_app import BASE_DIR
+from keras_preprocessing.image import ImageDataGenerator, img_to_array, load_img
+from tensorflow.keras.models import load_model
 
-# baseline model with data augmentation for the dogs vs cats dataset
-# save the final model to file
-from tensorflow import keras
 from tensorflow.keras.applications.vgg16 import VGG16
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Dense
@@ -22,7 +19,24 @@ from tensorflow.keras.optimizers import SGD
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 
-# define cnn model
+def get_train_generator():
+    imagegen = ImageDataGenerator()
+    # load train data
+    train_it = imagegen.flow_from_directory("out/train", class_mode="categorical", shuffle=False, batch_size=128,
+                                         target_size=(224, 224))
+    # load val data
+    val = imagegen.flow_from_directory("out/test", class_mode="categorical", shuffle=False, batch_size=128,
+                                       target_size=(224, 224))
+    return train_it
+
+def get_test_generator():
+    datagen = ImageDataGenerator(featurewise_center=True)
+    # specify imagenet mean values for centering
+    # prepare iterator
+    test_it = datagen.flow_from_directory('out/test',
+                                           class_mode='categorical', batch_size=128, target_size=(224, 224))
+    return test_it
+
 def define_model():
     # load model
     model = VGG16(include_top=False, input_shape=(224, 224, 3))
@@ -40,6 +54,46 @@ def define_model():
     model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
     return model
 
+def define_sequencial_model():
+    # building a linear stack of layers with the sequential model
+    model = Sequential()
+
+    # convolutional layer
+    model.add(Conv2D(50, kernel_size=(3, 3), strides=(1, 1), padding='same', activation='relu', input_shape=(224, 224, 3)))
+
+
+    # convolutional layer
+    model.add(Conv2D(75, kernel_size=(3, 3), strides=(1, 1), padding='same', activation='relu'))
+    model.add(MaxPool2D(pool_size=(2, 2)))
+    model.add(Dropout(0.25))
+
+    model.add(Conv2D(125, kernel_size=(3, 3), strides=(1, 1), padding='same', activation='relu'))
+    model.add(MaxPool2D(pool_size=(2, 2)))
+    model.add(Dropout(0.25))
+    # flatten output of conv
+    model.add(Flatten())
+
+    # hidden layer
+    model.add(Dense(500, activation='relu'))
+    model.add(Dropout(0.4))
+    model.add(Dense(250, activation='relu'))
+    model.add(Dropout(0.3))
+    # output layer
+    model.add(Dense(2, activation='softmax'))
+
+    # compiling the sequential model
+    model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer='adam')
+
+    # training the model for 10 epochs
+    return model
+
+def run_sequenctial():
+    model = define_sequencial_model()
+    train_it = get_train_generator()
+    print([train_it.class_indices])
+    model.fit(train_it, epochs=10)
+    model.save(os.path.join(BASE_DIR, 'ml_app', 'covid19'), save_format='h5')
+    model.summary()
 
 # run the test harness for evaluating a model
 def run_test_harness():
@@ -60,9 +114,43 @@ def run_test_harness():
     return loaded_model  # loaded_model.summary()
 
 
-if __name__ == '__main__':
-    run_test_harness()
 
+
+
+
+
+
+def icloud_api():
+    from pyicloud import PyiCloudService
+    api = PyiCloudService('divyesh.dabi@icloud.com', 'Div32190')
+    if api.requires_2sa:
+        import click
+        print("Two-step authentication required. Your trusted devices are:")
+
+        devices = api.trusted_devices
+        for i, device in enumerate(devices):
+            print("  %s: %s" % (i, device.get('deviceName',
+                                        "SMS to %s" % device.get('phoneNumber'))))
+
+        device = click.prompt('Which device would you like to use?', default=0)
+        device = devices[device]
+        if not api.send_verification_code(device):
+            print("Failed to send verification code")
+            sys.exit(1)
+
+        code = click.prompt('Please enter validation code')
+        if not api.validate_verification_code(device, code):
+            print("Failed to verify verification code")
+            sys.exit(1)
+    print(api.iphone.location())
+    print(api.iphone.status())
+    print(api.iphone.play_sound())
+    print(api.calendar.events())
+
+if __name__ == '__main__':
+    # run_test_harness()
+    # run_sequenctial()
+    icloud_api()
 
 def load_and_predict(xray):
     # load the image
@@ -117,3 +205,5 @@ def get_covid_19_xrays():
             filename = row["filename"].split(os.path.sep)[-1]
             filePath = os.path.sep.join([imageDir, filename])
             shutil.copy2(filePath, outputDir + 'test/SARS')
+
+
