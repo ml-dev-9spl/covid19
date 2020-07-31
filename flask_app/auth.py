@@ -1,7 +1,7 @@
 import functools
 import logging
 
-from flask import Blueprint, session, g
+from flask import Blueprint, session, g, flash
 from flask import request, url_for, render_template
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -61,6 +61,7 @@ def register():
             )
             db.session.add(user_obj)
             db.session.commit()
+            flash('Registration Successful !', category='success')
         except IntegrityError as e:
             form.email.errors.append("email already exsits !")
             return render_template('auth/register.html', form=form)
