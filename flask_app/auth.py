@@ -1,15 +1,16 @@
 import functools
 import logging
 
-from flask import Blueprint, session, g, current_app
-from flask import request, url_for, flash, render_template
+from flask import Blueprint, session, g
+from flask import request, url_for, render_template
+from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import redirect
 from flask_app import db
 from flask_app.forms import RegistrationForm, LoginForm
 from flask_app.models.users import User
-# from flask_app.db import get_db
 bp = Blueprint('auth', __name__, url_prefix='/auth')
+
 
 logger = logging.getLogger('flask.app')
 
@@ -52,13 +53,17 @@ def register():
             return render_template('auth/register.html', form=form)
 
         password_hash = generate_password_hash(password)
-        user_obj = User(
-            username=username,
-            password_hash=password_hash,
-            email=email
-        )
-        db.session.add(user_obj)
-        db.session.commit()
+        try:
+            user_obj = User(
+                username=username,
+                password_hash=password_hash,
+                email=email
+            )
+            db.session.add(user_obj)
+            db.session.commit()
+        except IntegrityError as e:
+            form.email.errors.append("email already exsits !")
+            return render_template('auth/register.html', form=form)
         return redirect(url_for('auth.login'))
     return render_template('auth/register.html', form=form)
 
