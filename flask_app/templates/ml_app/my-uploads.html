@@ -28,6 +28,7 @@
       <th  scope="col">User</th>
       <th  scope="col">Diesease</th>
       <th  scope="col">File</th>
+      <th  scope="col">Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -37,6 +38,10 @@
         <td>{{ item.user.username }}</td>
         <td>{{ item.get_diesease_display }}</td>
         <td> <img width="50"  height="50" src="{{item.get_xray_url}}" /></td>
+        <td>
+          <span><a href="{{url_for('ml_app.delete_upload', xray_id=item.id)}}">Delete</a></span>
+          <span><a href="{{url_for('ml_app.approve_upload', xray_id=item.id)}}">Approve</a></span>
+        </td>
       </tr>
     {% endfor %}
   </tbody>

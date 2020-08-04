@@ -23,6 +23,7 @@ class UserUploads(db.Model, BaseModel, metaclass=MetaBaseModel):
                             nullable=False)
     user = db.relationship('User',
                                backref=db.backref('uploads', lazy=True))
+    is_approved = db.Column(db.Boolean, default=False)
 
     def __init__(self, *args, **kwargs):
         super(UserUploads, self).__init__(*args, **kwargs)

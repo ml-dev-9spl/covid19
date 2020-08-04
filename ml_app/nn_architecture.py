@@ -115,11 +115,6 @@ def run_test_harness():
 
 
 
-
-
-
-
-
 def icloud_api():
     from pyicloud import PyiCloudService
     api = PyiCloudService('divyesh.dabi@icloud.com', 'Div32190')
@@ -143,9 +138,8 @@ def icloud_api():
             print("Failed to verify verification code")
             sys.exit(1)
     print(api.iphone.location())
-    print(api.iphone.status())
-    print(api.iphone.play_sound())
-    print(api.calendar.events())
+    print("Files =============>", api.files.dir())
+    print("Archives ==========>", api.archives.dir())
 
 if __name__ == '__main__':
     # run_test_harness()

@@ -93,3 +93,24 @@ def my_uploads():
     user_uploads = query.limit(10).offset((page-1) * 10)
     pagination = Pagination(page=page, per_page=10, total=query.count(), css_framework='bootstrap', search=search, record_name='users')
     return render_template('ml_app/my-uploads.html', uploads=user_uploads, pagination=pagination)
+
+
+@ml_bp.route('/my_uploads/<int:xray_id>/delete', methods=["GET"])
+@login_required
+def delete_upload(xray_id):
+
+    logger.info("User requested to delete the uploads  %s" % g.user)
+    record =  UserUploads.query.get(xray_id).delete()
+    flash(f"File {xray_id} has been removed")
+    return redirect(url_for('ml_app.my_uploads'))
+
+
+@ml_bp.route('/my_uploads/<int:xray_id>/approve', methods=["GET"])
+@login_required
+def approve_upload(xray_id):
+    logger.info("User requested to delete the uploads  %s" % g.user)
+    record =  UserUploads.query.get(xray_id)
+    record.is_approved = True
+    record.save()
+    flash(f"File {xray_id} has been Approved")
+    return redirect(url_for('ml_app.my_uploads'))
